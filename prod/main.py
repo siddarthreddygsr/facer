@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
-from streamer import VideoStreamReader
-# from streamer2 import VideoStreamReader
+# from streamer import VideoStreamReader
+from streamer2 import VideoStreamReader
 import time
+import pdb
 from processor import FaceDetector
 from embeddings import create_face_embeddings
 
@@ -14,8 +15,8 @@ def main():
     embedding_file = 'face_embeddings.json'
     model_name = 'buffalo_l'
     create_face_embeddings('../data', embedding_file, model_name)
-    # stream_reader = VideoStreamReader()
-    stream_reader = VideoStreamReader(RTSP_URL)
+    stream_reader = VideoStreamReader()
+    # stream_reader = VideoStreamReader(RTSP_URL)
     face_detector = FaceDetector(model_name)
 
     stream_reader.start()

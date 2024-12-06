@@ -1,3 +1,4 @@
+import pdb
 import cv2
 from insightface.app import FaceAnalysis
 import json
@@ -24,9 +25,9 @@ class FaceDetector:
             for stored_embedding in person_embeddings:
                 cos_sim = np.dot(input_embedding, stored_embedding) / (norm(input_embedding) * norm(stored_embedding))
                 
-                matches.append({'name':person_name, 'score':round(float(cos_sim), 2)})
-                # if cos_sim > threshold:
-                    # break
+                if cos_sim > threshold:
+                    matches.append({'name':person_name, 'score':round(float(cos_sim), 2)})
+                    break
         
         return matches
 
@@ -36,13 +37,12 @@ class FaceDetector:
         for face in faces:
             bbox = face.bbox.astype(int)
             name = self.compare_face_embeddings(face.normed_embedding, self.loaded_embeddings, 0.5)
-            if len(name) > 0:
-                name = name[0]
-            else:
+            if len(name) == 0:
                 name = None
             name = str(name)
             cv2.rectangle(annotated_img, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (0, 255, 0), 2)
             text_position = (bbox[0], bbox[1] - 10)
+            print(name)
             cv2.putText(annotated_img, name, text_position, cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         
         return annotated_img
